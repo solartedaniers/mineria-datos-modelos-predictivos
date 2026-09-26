@@ -10,7 +10,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Estilos CSS personalizados para darle un aspecto moderno, elegante y profesional (SaaS UI)
+# Estilos CSS personalizados para corregir contrastes en modo oscuro y dar formato SaaS UI
 st.markdown("""
     <style>
     .main {
@@ -19,6 +19,10 @@ st.markdown("""
     }
     .stSidebar {
         background-color: #161b22;
+    }
+    /* Estilo para forzar legibilidad perfecta en los selectores y títulos del sidebar en modo oscuro */
+    .stSidebar h1, .stSidebar h2, .stSidebar h3, .stSidebar label, .stSidebar .stSelectbox div, .stSidebar span {
+        color: #f3f4f6 !important;
     }
     .card {
         background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
@@ -41,22 +45,22 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Barra lateral de navegación
-st.sidebar.title("🎛️ Panel de Control")
+# Barra lateral de navegación con títulos claros
+st.sidebar.markdown("### 🎛️ Panel de Control")
 st.sidebar.markdown("---")
 modelo_seleccionado = st.sidebar.selectbox(
     "Seleccione el Modelo Predictivo:",
     ["📊 Resumen General", "💵 Predicción de Dólar", "🩺 Predicción de Glucosa", "⚡ Consumo de Energía"]
 )
 st.sidebar.markdown("---")
-st.sidebar.info("💡 **Metodología CRISP-DM:** Modelos entrenados con regresión lineal múltiple sobre datasets depurados mediante IQR.")
+st.sidebar.info("💡 **Metodología CRISP-DM:** Modelos entrenados con Regresión Lineal Múltiple sobre datasets depurados mediante IQR.")
 
 # ==========================================
 # VISTA 1: RESUMEN GENERAL / HOME
 # ==========================================
 if modelo_seleccionado == "📊 Resumen General":
     st.title("🚀 Suite de Modelos Predictivos en Minería de Datos")
-    st.markdown("Bienvenido a la plataforma interactiva de estimación analítica basada en Machine Learning.")
+    st.markdown("Plataforma interactiva de estimación analítica basada en Machine Learning y la metodología CRISP-DM.")
     
     col1, col2, col3 = st.columns(3)
     
@@ -109,7 +113,6 @@ elif modelo_seleccionado == "💵 Predicción de Dólar":
         st.markdown("### 📤 Resultado de la Estimación")
         if calcular_dolar:
             try:
-                # Ruta actualizada apuntando a la carpeta modelos_pkl
                 model = joblib.load('modelos_pkl/modelo_dolar.pkl')
                 input_data = pd.DataFrame([[dia, inflacion, tasa_interes]], columns=['Dia', 'Inflacion', 'Tasa_interes'])
                 pred = model.predict(input_data)[0]
@@ -148,7 +151,6 @@ elif modelo_seleccionado == "🩺 Predicción de Glucosa":
         st.markdown("### 📤 Resultado Clínico Estimado")
         if calcular_glu:
             try:
-                # Ruta actualizada apuntando a la carpeta modelos_pkl
                 model = joblib.load('modelos_pkl/modelo_glucosa.pkl')
                 input_data = pd.DataFrame([[edad, imc, actividad]], columns=['Edad', 'IMC', 'Actividad_Fisica'])
                 pred = model.predict(input_data)[0]
@@ -191,7 +193,6 @@ elif modelo_seleccionado == "⚡ Consumo de Energía":
         st.markdown("### 📤 Consumo Estimado")
         if calcular_ene:
             try:
-                # Ruta actualizada apuntando a la carpeta modelos_pkl
                 model = joblib.load('modelos_pkl/modelo_energia.pkl')
                 input_data = pd.DataFrame([[temp, hora, dia_sem]], columns=['Temperatura', 'Hora', 'Dia_Semana'])
                 pred = model.predict(input_data)[0]
@@ -208,6 +209,12 @@ elif modelo_seleccionado == "⚡ Consumo de Energía":
         else:
             st.info("Configure las variables ambientales y temporales para estimar el consumo energético.")
 
-# Pie de página institucional
+# Pie de página institucional actualizado con tus datos y créditos
 st.markdown("---")
-st.markdown("<p style='text-align: center; color: #6b7280; font-size: 13px;'>Plataforma Desarrollada para Laboratorio de Minería de Datos • CRISP-DM & Machine Learning</p>", unsafe_allow_html=True)
+st.markdown(
+    "<p style='text-align: center; color: #9ca3af; font-size: 14px; font-weight: 500;'>"
+    "Plataforma Desarrollada para Laboratorio de Minería de Datos • CRISP-DM & Machine Learning<br>"
+    "<b>Autor:</b> Daniers Solarte | <b>Docente:</b> Cristian Camilo Ordoñez Quintero"
+    "</p>", 
+    unsafe_allow_html=True
+)
