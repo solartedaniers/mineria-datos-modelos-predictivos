@@ -10,7 +10,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Estilos CSS personalizados para corregir contrastes en modo oscuro y dar formato SaaS UI
+# Estilos CSS profesionales (SaaS UI)
 st.markdown("""
     <style>
     .main {
@@ -20,7 +20,6 @@ st.markdown("""
     .stSidebar {
         background-color: #161b22;
     }
-    /* Estilo para forzar legibilidad perfecta en los selectores y títulos del sidebar en modo oscuro */
     .stSidebar h1, .stSidebar h2, .stSidebar h3, .stSidebar label, .stSidebar .stSelectbox div, .stSidebar span {
         color: #f3f4f6 !important;
     }
@@ -45,7 +44,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Barra lateral de navegación con títulos claros
+# Barra lateral de navegación
 st.sidebar.markdown("### 🎛️ Panel de Control")
 st.sidebar.markdown("---")
 modelo_seleccionado = st.sidebar.selectbox(
@@ -104,8 +103,8 @@ elif modelo_seleccionado == "💵 Predicción de Dólar":
         st.markdown("### 📥 Parámetros de Entrada")
         with st.container():
             dia = st.number_input("Número de Día", min_value=1, max_value=2000, value=501, step=1)
-            inflacion = st.number_input("Tasa de Inflación Diaria", min_value=0.0, max_value=0.20, value=0.0200, format="%.4f")
-            tasa_interes = st.number_input("Tasa de Interés Diaria", min_value=1.0, max_value=20.0, value=5.0000, format="%.4f")
+            inflacion = st.number_input("Tasa de Inflación Diaria (ej: 0.02 para 2%)", min_value=0.0, max_value=0.20, value=0.02, format="%.4f")
+            tasa_interes = st.number_input("Tasa de Interés Diaria (%)", min_value=1.0, max_value=20.0, value=5.00, format="%.2f")
             
             calcular_dolar = st.button("Ejecutar Predicción del Dólar", type="primary", use_container_width=True)
 
@@ -117,11 +116,11 @@ elif modelo_seleccionado == "💵 Predicción de Dólar":
                 input_data = pd.DataFrame([[dia, inflacion, tasa_interes]], columns=['Dia', 'Inflacion', 'Tasa_interes'])
                 pred = model.predict(input_data)[0]
                 
+                # Tarjeta limpia sin texto técnico de R^2
                 st.markdown(f"""
-                    <div class="card" style="text-align: center; border-color: #38bdf8;">
+                    <div class="card" style="text-align: center; border-color: #38bdf8; padding: 40px 20px;">
                         <p class="metric-title">PRECIO ESTIMADO DEL DÓLAR</p>
                         <p class="metric-value">${pred:,.2f}</p>
-                        <p style="color: #9ca3af; font-size: 14px; margin-top: 10px;">Modelo validado con $R^2 \approx 0.9959$</p>
                     </div>
                 """, unsafe_allow_html=True)
             except Exception as e:
@@ -155,11 +154,11 @@ elif modelo_seleccionado == "🩺 Predicción de Glucosa":
                 input_data = pd.DataFrame([[edad, imc, actividad]], columns=['Edad', 'IMC', 'Actividad_Fisica'])
                 pred = model.predict(input_data)[0]
                 
+                # Tarjeta limpia sin texto técnico de R^2
                 st.markdown(f"""
-                    <div class="card" style="text-align: center; border-color: #a855f7;">
+                    <div class="card" style="text-align: center; border-color: #a855f7; padding: 40px 20px;">
                         <p class="metric-title">NIVEL DE GLUCOSA ESTIMADO</p>
                         <p class="metric-value" style="color: #c084fc;">{pred:.2f} mg/dL</p>
-                        <p style="color: #9ca3af; font-size: 14px; margin-top: 10px;">Modelo validado con $R^2 \approx 0.6948$</p>
                     </div>
                 """, unsafe_allow_html=True)
             except Exception as e:
@@ -197,11 +196,11 @@ elif modelo_seleccionado == "⚡ Consumo de Energía":
                 input_data = pd.DataFrame([[temp, hora, dia_sem]], columns=['Temperatura', 'Hora', 'Dia_Semana'])
                 pred = model.predict(input_data)[0]
                 
+                # Tarjeta limpia sin texto técnico de R^2
                 st.markdown(f"""
-                    <div class="card" style="text-align: center; border-color: #eab308;">
+                    <div class="card" style="text-align: center; border-color: #eab308; padding: 40px 20px;">
                         <p class="metric-title">DEMANDA ELÉCTRICA ESTIMADA</p>
                         <p class="metric-value" style="color: #facc15;">{pred:.2f} kWh</p>
-                        <p style="color: #9ca3af; font-size: 14px; margin-top: 10px;">Modelo validado con $R^2 \approx 0.8954$</p>
                     </div>
                 """, unsafe_allow_html=True)
             except Exception as e:
@@ -209,7 +208,7 @@ elif modelo_seleccionado == "⚡ Consumo de Energía":
         else:
             st.info("Configure las variables ambientales y temporales para estimar el consumo energético.")
 
-# Pie de página institucional actualizado con tus datos y créditos
+# Pie de página institucional
 st.markdown("---")
 st.markdown(
     "<p style='text-align: center; color: #9ca3af; font-size: 14px; font-weight: 500;'>"
