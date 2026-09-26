@@ -10,7 +10,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Estilos CSS profesionales (SaaS UI)
+# Estilos CSS profesionales (SaaS UI) y corrección de legibilidad en modo oscuro
 st.markdown("""
     <style>
     .main {
@@ -103,8 +103,9 @@ elif modelo_seleccionado == "💵 Predicción de Dólar":
         st.markdown("### 📥 Parámetros de Entrada")
         with st.container():
             dia = st.number_input("Número de Día", min_value=1, max_value=2000, value=501, step=1)
-            inflacion = st.number_input("Tasa de Inflación Diaria (ej: 0.02 para 2%)", min_value=0.0, max_value=0.20, value=0.02, format="%.4f")
-            tasa_interes = st.number_input("Tasa de Interés Diaria (%)", min_value=1.0, max_value=20.0, value=5.00, format="%.2f")
+            # Entrada en formato porcentaje directo (ej: 2.0 para 2%)
+            inflacion_pct = st.number_input("Tasa de Inflación (%)", min_value=0.0, max_value=20.0, value=2.0, format="%.2f")
+            tasa_interes = st.number_input("Tasa de Interés (%)", min_value=1.0, max_value=20.0, value=5.0, format="%.2f")
             
             calcular_dolar = st.button("Ejecutar Predicción del Dólar", type="primary", use_container_width=True)
 
@@ -113,10 +114,12 @@ elif modelo_seleccionado == "💵 Predicción de Dólar":
         if calcular_dolar:
             try:
                 model = joblib.load('modelos_pkl/modelo_dolar.pkl')
-                input_data = pd.DataFrame([[dia, inflacion, tasa_interes]], columns=['Dia', 'Inflacion', 'Tasa_interes'])
+                # Conversión interna del porcentaje a decimal para el modelo
+                inflacion_real = inflacion_pct / 100.0
+                
+                input_data = pd.DataFrame([[dia, inflacion_real, tasa_interes]], columns=['Dia', 'Inflacion', 'Tasa_interes'])
                 pred = model.predict(input_data)[0]
                 
-                # Tarjeta limpia sin texto técnico de R^2
                 st.markdown(f"""
                     <div class="card" style="text-align: center; border-color: #38bdf8; padding: 40px 20px;">
                         <p class="metric-title">PRECIO ESTIMADO DEL DÓLAR</p>
@@ -154,7 +157,6 @@ elif modelo_seleccionado == "🩺 Predicción de Glucosa":
                 input_data = pd.DataFrame([[edad, imc, actividad]], columns=['Edad', 'IMC', 'Actividad_Fisica'])
                 pred = model.predict(input_data)[0]
                 
-                # Tarjeta limpia sin texto técnico de R^2
                 st.markdown(f"""
                     <div class="card" style="text-align: center; border-color: #a855f7; padding: 40px 20px;">
                         <p class="metric-title">NIVEL DE GLUCOSA ESTIMADO</p>
@@ -196,7 +198,6 @@ elif modelo_seleccionado == "⚡ Consumo de Energía":
                 input_data = pd.DataFrame([[temp, hora, dia_sem]], columns=['Temperatura', 'Hora', 'Dia_Semana'])
                 pred = model.predict(input_data)[0]
                 
-                # Tarjeta limpia sin texto técnico de R^2
                 st.markdown(f"""
                     <div class="card" style="text-align: center; border-color: #eab308; padding: 40px 20px;">
                         <p class="metric-title">DEMANDA ELÉCTRICA ESTIMADA</p>
@@ -208,7 +209,7 @@ elif modelo_seleccionado == "⚡ Consumo de Energía":
         else:
             st.info("Configure las variables ambientales y temporales para estimar el consumo energético.")
 
-# Pie de página institucional
+# Pie de página institucional con tus créditos
 st.markdown("---")
 st.markdown(
     "<p style='text-align: center; color: #9ca3af; font-size: 14px; font-weight: 500;'>"
